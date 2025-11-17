@@ -10,7 +10,7 @@ interface SnippetShowPageProps {
 }
 
 export default async function SnippetShowPage(props: SnippetShowPageProps) {
-  await new Promise((r) => setTimeout(r, 2000));
+  await new Promise((r) => setTimeout(r, 2000)); // we've got that arbitrary two second pause as we load up some data.
 
   const { id } = await props.params;
 
