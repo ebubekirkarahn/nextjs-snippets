@@ -23,6 +23,48 @@ export default async function SnippetShowPage(props: SnippetShowPageProps) {
   }
   const deleteSnippetAction = actions.deleteSnippet.bind(null, snippet.id);
 
+  /*
+  Bu satır, `deleteSnippet` fonksiyonuna **id parametresini önceden bağlamak (bind)** için yazılmış.
+
+**Neden `bind` kullanılıyor?**
+
+1. **Server Actions form kullanımı**: Next.js'te server action'ları bir `<form>`'un `action` prop'una verirken, fonksiyon **parametre almadan** çağrılmalıdır.
+
+2. **ID'yi önceden sabitleme**: `bind(null, snippet.id)` ile yeni bir fonksiyon oluşturuluyor ve `snippet.id` ilk parametre olarak sabitleniyor.
+
+**Örnek:**
+```tsx
+// ❌ Bu çalışmaz - action prop parametre beklemez
+<form action={actions.deleteSnippet(snippet.id)}>
+
+// ✅ Bu çalışır - bind ile parametresiz fonksiyon oluşturulur
+const deleteSnippetAction = actions.deleteSnippet.bind(null, snippet.id);
+<form action={deleteSnippetAction}>
+```
+
+**Alternatif yöntem:**
+```tsx
+// Wrapper fonksiyon kullanarak
+<form action={() => actions.deleteSnippet(snippet.id)}>
+```
+
+Ancak Next.js Server Actions ile form kullanımında `bind` yöntemi daha yaygın ve önerilen yaklaşımdır çünkü direkt olarak server action referansını korur.
+
+Next.js Server Actions, özel olarak işaretlenmiş ('use server') fonksiyonlardır. Next.js bu fonksiyonları özel bir şekilde işler:
+
+bind kullandığında:
+
+✅ Next.js hala bunun bir server action olduğunu biliyor
+✅ Otomatik olarak form submit'i server'a gönderir
+✅ JavaScript olmadan bile çalışır (progressive enhancement)
+Arrow function kullanırsanız:
+
+❌ Next.js bunu normal bir client-side fonksiyon olarak görür
+❌ Tarayıcıda JavaScript gerektirir
+❌ Server action özelliklerini kaybeder
+Özet: bind kullanmak, fonksiyonun "ben bir server action'ım" kimliğini korur. Arrow function ise yeni bir client fonksiyon yaratır ve server action özelliğini bozar.
+
+*/
   return (
     <div>
       <div className="flex m-4 justify-between items-center">
