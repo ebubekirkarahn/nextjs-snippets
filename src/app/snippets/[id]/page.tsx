@@ -97,3 +97,13 @@ export async function generateStaticParams() {
     };
   });
 }
+
+/**
+ * They're going to reach into the database, get those snippets, pull them out, render the page, and
+
+then next is going to cache the result.
+
+This all happens at build time.
+
+we are still able to cache some of these different pages, even if they are initially thought to be dynamic.
+ */
