@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { db } from '@/db';
 
@@ -17,11 +18,12 @@ export async function deleteSnippet(id: number) {
     where: { id },
   });
 
+  revalidatePath('/');
   redirect('/');
 }
 
 export async function createSnippet(
-  formState : { message: string },  /* _formState */
+  formState: { message: string },  /* _formState */
   formData: FormData
 ) {
   try {
@@ -59,6 +61,12 @@ export async function createSnippet(
     }
   }
 
+  revalidatePath('/');
   // Redirect the user back to the root route
   redirect('/');
 }
+
+/**
+ * Home page is still static, so we need to revalidate the cache
+ * after creating a new snippet.
+ */
