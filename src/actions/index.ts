@@ -10,6 +10,9 @@ export async function editSnippet(id: number, code: string) {
     data: { code },
   });
 
+  
+  revalidatePath(`/snippets/${id}`); /** Clear cache for this page so next visit shows fresh data
+                                    Invalidate cache - next request will regenerate the page with updated snippet */
   redirect(`/snippets/${id}`);
 }
 
